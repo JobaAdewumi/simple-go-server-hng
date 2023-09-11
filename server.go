@@ -106,7 +106,7 @@ func returnInfo(c *gin.Context) {
 
 	simpleMessage := simpleMessage{
 		SlackName:     slack_name,
-		UtcTime:       currentUtcTime.Format("2023-09-11T12:09:07Z"),
+		UtcTime:       currentUtcTime.Format(time.RFC3339),
 		CurrentDay:    currentDay.String(),
 		GithubFileUrl: "https://github.com/JobaAdewumi/simple-go-server-hng/blob/main/server.go",
 		GithubRepoUrl: "https://github.com/JobaAdewumi/simple-go-server-hng",
