@@ -1,4 +1,4 @@
-package main
+package handler
 
 // Import all used packages
 import (
