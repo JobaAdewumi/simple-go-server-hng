@@ -26,6 +26,7 @@ func handleFunc(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, `{"slack_name": "%[3]s", "current_day": "%[1]s", "utc_time": "%[2]s", "track": "%[4]s", "github_file_url": "https", "github_repo_url": "https", "status_code": 200}`, currentDay, currentUtcTime, slack_name, track)
 }
 
+// Testing
 func Main() {
 	http.Handle("/api", http.HandlerFunc(handleFunc))
 }
