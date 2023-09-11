@@ -33,7 +33,7 @@ import (
 // }
 
 // Main function
-func Main() {
+func main() {
 	// Api route
 	http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
 		// Get query parameters from url
