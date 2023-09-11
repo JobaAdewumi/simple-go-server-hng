@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func handleFunc(w http.ResponseWriter, r *http.Request) {
+func HandleFunc(w http.ResponseWriter, r *http.Request) {
 	// Get query parameters from url
 	slack_name := r.URL.Query().Get("slack_name")
 	if slack_name == "" {
@@ -27,9 +27,9 @@ func handleFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 // Testing
-func Main() {
-	http.Handle("/api", http.HandlerFunc(handleFunc))
-}
+// func Main() {
+// 	http.Handle("/api", http.HandlerFunc(handleFunc))
+// }
 
 // Main function
 // func Main() {
