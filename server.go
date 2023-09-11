@@ -108,7 +108,7 @@ func returnInfo(c *gin.Context) {
 		SlackName:     slack_name,
 		UtcTime:       currentUtcTime.Local().String(),
 		CurrentDay:    currentDay.String(),
-		GithubFileUrl: "Subscribe to my channel!",
+		GithubFileUrl: "https://github.com/JobaAdewumi/simple-go-server-hng/blob/main/server.go",
 		GithubRepoUrl: "https://github.com/JobaAdewumi/simple-go-server-hng",
 		Track:         track,
 		StatusCode:    200,
