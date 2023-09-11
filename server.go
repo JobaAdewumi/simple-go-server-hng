@@ -3,6 +3,7 @@ package main
 // Import all used packages
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -31,7 +32,7 @@ import (
 // 	http.Handle("/api", http.HandlerFunc(handleFunc))
 // }
 
-Main function
+// Main function
 func Main() {
 	// Api route
 	http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
