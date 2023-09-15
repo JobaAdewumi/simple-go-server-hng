@@ -126,3 +126,21 @@ Response 200
 go version >= 1.20.5
 postgresql >= 14
 ```
+
+Run project
+```bash
+# Clone repository from github
+git clone https://github.com/JobaAdewumi/simple-go-server-hng.git
+
+checkout to task-2 branch
+git checkout task-2
+
+download and install dependencies
+go get
+go install
+
+setup env file
+
+run server
+go run main.go
+```
