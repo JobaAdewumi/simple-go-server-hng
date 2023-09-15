@@ -109,5 +109,20 @@ Response
     "success": "Delete successful"
     
 }
-```
 
+Example
+DELETE url/api/:user_id
+user_id from url parameter
+
+Response 200
+{
+    "success": "Delete successful"
+    
+}
+```
+## Run Server
+### Prerequisites
+```bash
+go version >= 1.20.5
+postgresql >= 14
+```
