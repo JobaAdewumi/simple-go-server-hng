@@ -14,22 +14,22 @@ type Person struct {
 	Name string    `gorm:"size:255;not null;unique" json:"name"`
 }
 
-func (u *Person) BeforeCreate(tx *gorm.DB) (err error) {
-	u.ID = uuid.New()
-	return
-}
 
 func (person *Person) Save() (*Person, error) {
-	// person.Name = html.EscapeString(strings.TrimSpace(person.Name))
-	err := database.Database.Select("Name").Create(&person)
+	newPerson := Person{
+    ID:   uuid.New(),
+    Name: person.Name,
+}
+	err := database.Database.Create(&newPerson)
 
 	if err.Error != nil {
 		return &Person{}, err.Error
 	}
-	return person, nil
+	return &newPerson, nil
 }
 
 func (p *Person) Update() (int64, error) {
+	
 	var person Person
 	// person.Name = html.EscapeString(strings.TrimSpace(person.Name))
 	err := database.Database.Session(&gorm.Session{SkipHooks: true}).Save(&p)
