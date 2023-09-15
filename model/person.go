@@ -17,7 +17,7 @@ type Person struct {
 
 func (person *Person) Save() (*Person, error) {
 	person.Name = html.EscapeString(strings.TrimSpace(person.Name))
-	err := database.Database.Select("Name").Create(&person)
+	err := database.Database.Select("Name", "ID").Create(&person)
 	fmt.Print(err)
 	fmt.Print(person)
 
