@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"server/controller"
 	"server/database"
 	"server/model"
@@ -12,31 +13,39 @@ import (
 )
 
 func main() {
-    loadEnv()
-    loadDatabase()
+	loadEnv()
+	loadDatabase()
+	serveApplication()
 }
 
 func loadDatabase() {
-    database.Connect()
-    database.Database.AutoMigrate(&model.Person{})
+	database.Connect()
+	database.Database.AutoMigrate(&model.Person{})
 }
 
 func loadEnv() {
-    err := godotenv.Load(".env.local")
-    if err != nil {
-        log.Fatal("Error loading .env file")
-    }
+	err := godotenv.Load(".env.local")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }
 
 func serveApplication() {
-    router := gin.Default()
-    router.Use(controller.CORSMiddleware())
-    publicRoutes := router.Group("/api")
-    publicRoutes.POST("/", controller.Create)
-    publicRoutes.GET("/:userId", controller.Read)
-    publicRoutes.PUT("/:userId", controller.Update)
-    publicRoutes.DELETE("/:userId", controller.Delete)
+	router := gin.Default()
+	router.Use(controller.CORSMiddleware())
+	publicRoutes := router.Group("/api")
+	publicRoutes.POST("", controller.Create)
+	publicRoutes.GET("/:userId", controller.Read)
+	publicRoutes.PUT("/:userId", controller.Update)
+	publicRoutes.DELETE("/:userId", controller.Delete)
 
-    router.Run(":8000")
-    fmt.Println("Server running on port 8000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000"
+	}
+	if err := router.Run(":" + port); err != nil {
+		log.Panicf("error: %s", err)
+	}
+
+	fmt.Println("Server running on port 8000")
 }

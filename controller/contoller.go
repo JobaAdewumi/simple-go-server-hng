@@ -17,6 +17,11 @@ func Create(context *gin.Context) {
 		return
 	}
 
+	if input.Name == "" {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Empty string"})
+		return
+	}
+
 	person := model.Person{
 		Name: input.Name,
 	}
@@ -28,7 +33,12 @@ func Create(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"Name": savedPerson})
+	if savedPerson.Name == "" {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusCreated, gin.H{"Rows Created": savedPerson})
 }
 
 func Read(context *gin.Context) {
@@ -47,7 +57,12 @@ func Read(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"id": user_id, "person": person})
+	if person.Name == "" {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"person": person})
 
 }
 
@@ -66,7 +81,7 @@ func Update(context *gin.Context) {
 		return
 	}
 
-	person, err := model.FindPersonById(user_id)
+	err := model.UpdatePersonById(user_id)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -74,17 +89,18 @@ func Update(context *gin.Context) {
 	}
 
 	newPerson := model.Person{
+		ID:   user_id,
 		Name: input.Name,
 	}
 
-	savedPerson, err := newPerson.Save()
+	savedPerson, err := newPerson.Update()
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"user_id": user_id, "old_name": person, "new_name": savedPerson})
+	context.JSON(http.StatusOK, gin.H{"Rows Affected": savedPerson})
 }
 
 func Delete(context *gin.Context) {
@@ -100,6 +116,17 @@ func Delete(context *gin.Context) {
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if string == "Error Deleting" {
+
+		context.JSON(http.StatusBadRequest, gin.H{"error": string})
+		return
+	}
+	if string == "Person cannot be found" {
+
+		context.JSON(http.StatusBadRequest, gin.H{"error": string})
 		return
 	}
 
