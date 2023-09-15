@@ -1,11 +1,14 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"server/model"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func Create(context *gin.Context) {
@@ -21,8 +24,9 @@ func Create(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Empty string"})
 		return
 	}
-
+	fmt.Print(uuid.New().ID())
 	person := model.Person{
+		ID:   int(uuid.New().ID()),
 		Name: input.Name,
 	}
 
@@ -43,12 +47,16 @@ func Create(context *gin.Context) {
 
 func Read(context *gin.Context) {
 
-	user_id := context.Param("userId")
-
-	if user_id == "" {
+	user_id, err := strconv.Atoi(context.Param("userId"))
+	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameter"})
 		return
 	}
+
+	// if user_id == "" {
+	// 	context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameter"})
+	// 	return
+	// }
 
 	person, err := model.FindPersonById(user_id)
 
@@ -67,9 +75,9 @@ func Read(context *gin.Context) {
 }
 
 func Update(context *gin.Context) {
-	user_id := context.Param("userId")
+	user_id, err := strconv.Atoi(context.Param("userId"))
 
-	if user_id == "" {
+	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameter"})
 		return
 	}
@@ -81,10 +89,10 @@ func Update(context *gin.Context) {
 		return
 	}
 
-	err := model.UpdatePersonById(user_id)
+	errFunc := model.UpdatePersonById(user_id)
 
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if errFunc != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": errFunc.Error()})
 		return
 	}
 

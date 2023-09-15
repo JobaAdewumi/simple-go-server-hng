@@ -11,13 +11,13 @@ import (
 
 type Person struct {
 	gorm.Model
-	ID   string `gorm:"primaryKey;auto_increment;not_null"`
+	ID   int    `gorm:"primaryKey"`
 	Name string `gorm:"size:255;not null;unique" json:"name"`
 }
 
 func (person *Person) Save() (*Person, error) {
 	person.Name = html.EscapeString(strings.TrimSpace(person.Name))
-	err := database.Database.Select("Name").Create(&person)
+	err := database.Database.Create(&person)
 	fmt.Print(err)
 	fmt.Print(person)
 
@@ -42,7 +42,7 @@ func (p *Person) Update() (int64, error) {
 	return err.RowsAffected, nil
 }
 
-func FindPersonById(id string) (Person, error) {
+func FindPersonById(id int) (Person, error) {
 	var person Person
 	err := database.Database.Find(&person, id)
 	if err.Error != nil {
@@ -51,7 +51,7 @@ func FindPersonById(id string) (Person, error) {
 	return person, nil
 }
 
-func UpdatePersonById(id string) error {
+func UpdatePersonById(id int) error {
 	var person Person
 	err := database.Database.Find(&person, id)
 	if err.Error != nil {

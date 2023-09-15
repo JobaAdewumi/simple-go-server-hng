@@ -42,7 +42,7 @@ func serveApplication() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "4000"
+		port = "8000"
 	}
 	if err := router.Run(":" + port); err != nil {
 		log.Panicf("error: %s", err)
