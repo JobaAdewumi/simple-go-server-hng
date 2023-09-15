@@ -11,11 +11,9 @@ import (
 
 type Person struct {
 	gorm.Model
-	ID   string `gorm:"primaryKey"`
+	ID   string `gorm:"primaryKey;auto_increment;not_null"`
 	Name string `gorm:"size:255;not null;unique" json:"name"`
 }
-
-
 
 func (person *Person) Save() (*Person, error) {
 	person.Name = html.EscapeString(strings.TrimSpace(person.Name))
