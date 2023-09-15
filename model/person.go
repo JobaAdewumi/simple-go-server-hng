@@ -10,14 +10,14 @@ import (
 
 type Person struct {
 	gorm.Model
-	ID   uuid.UUID `gorm:"type:uuid;default:gen_random_uuid()"`
+	ID   string `gorm:"primaryKey"`
 	Name string    `gorm:"size:255;not null;unique" json:"name"`
 }
 
 
 func (person *Person) Save() (*Person, error) {
 	newPerson := Person{
-    ID:   uuid.New(),
+    ID:   uuid.NewString(),
     Name: person.Name,
 }
 	err := database.Database.Create(&newPerson)
@@ -29,13 +29,7 @@ func (person *Person) Save() (*Person, error) {
 }
 
 func (p *Person) Update() (int64, error) {
-	
-	var person Person
-	// person.Name = html.EscapeString(strings.TrimSpace(person.Name))
-	err := database.Database.Session(&gorm.Session{SkipHooks: true}).Save(&p)
-	fmt.Print(err)
-	fmt.Print(person)
-	fmt.Print(p)
+	err := database.Database.Save(&p)
 	if err.Error != nil {
 		return 0, err.Error
 	}

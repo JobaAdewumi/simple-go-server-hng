@@ -90,7 +90,7 @@ func Update(context *gin.Context) {
 	}
 
 	newPerson := model.Person{
-		// ID:   user_id,
+		ID:   user_id,
 		Name: input.Name,
 	}
 
