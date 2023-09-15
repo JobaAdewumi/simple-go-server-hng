@@ -31,6 +31,7 @@ func loadEnv() {
 }
 
 func serveApplication() {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(controller.CORSMiddleware())
 	publicRoutes := router.Group("/api")
