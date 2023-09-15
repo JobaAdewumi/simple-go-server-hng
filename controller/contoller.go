@@ -39,7 +39,7 @@ func Create(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"Rows Created": savedPerson})
+	context.JSON(http.StatusCreated, gin.H{"Row Created": savedPerson})
 }
 
 func Read(context *gin.Context) {
