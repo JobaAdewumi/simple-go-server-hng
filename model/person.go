@@ -6,13 +6,14 @@ import (
 	"server/database"
 	"strings"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Person struct {
 	gorm.Model
-	ID   int    `gorm:"primaryKey"`
-	Name string `gorm:"size:255;not null;unique" json:"name"`
+	ID   uuid.UUID `gorm:"type:uuid;default:gen_random_uuid()"`
+	Name string    `gorm:"size:255;not null;unique" json:"name"`
 }
 
 func (person *Person) Save() (*Person, error) {
@@ -24,7 +25,6 @@ func (person *Person) Save() (*Person, error) {
 	if err.Error != nil {
 		return &Person{}, err.Error
 	}
-	// id := err.
 	return person, nil
 }
 
@@ -38,22 +38,21 @@ func (p *Person) Update() (int64, error) {
 	if err.Error != nil {
 		return 0, err.Error
 	}
-	// id := err.
 	return err.RowsAffected, nil
 }
 
-func FindPersonById(id int) (Person, error) {
+func FindPersonById(id string) (Person, error) {
 	var person Person
-	err := database.Database.Find(&person, id)
+	err := database.Database.Find(&person, "id = ?", id)
 	if err.Error != nil {
 		return Person{}, err.Error
 	}
 	return person, nil
 }
 
-func UpdatePersonById(id int) error {
+func UpdatePersonById(id string) error {
 	var person Person
-	err := database.Database.Find(&person, id)
+	err := database.Database.Find(&person, "id = ?", id)
 	if err.Error != nil {
 		return err.Error
 	}
@@ -61,9 +60,7 @@ func UpdatePersonById(id int) error {
 }
 
 func DeletePersonById(id string) (string, error) {
-	// var person Person
-	err := database.Database.Unscoped().Delete(&Person{}, id)
-	fmt.Print(err)
+	err := database.Database.Unscoped().Delete(&Person{}, "id = ?", id)
 	if err.RowsAffected == 0 {
 		return "Person cannot be found", err.Error
 	}

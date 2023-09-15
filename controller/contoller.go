@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"server/model"
-	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -26,7 +24,6 @@ func Create(context *gin.Context) {
 	}
 	fmt.Print(uuid.New().ID())
 	person := model.Person{
-		ID:   int(uuid.New().ID()),
 		Name: input.Name,
 	}
 
@@ -47,16 +44,12 @@ func Create(context *gin.Context) {
 
 func Read(context *gin.Context) {
 
-	user_id, err := strconv.Atoi(context.Param("userId"))
-	if err != nil {
+	user_id := context.Param("userId")
+
+	if user_id == "" {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameter"})
 		return
 	}
-
-	// if user_id == "" {
-	// 	context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameter"})
-	// 	return
-	// }
 
 	person, err := model.FindPersonById(user_id)
 
@@ -75,9 +68,9 @@ func Read(context *gin.Context) {
 }
 
 func Update(context *gin.Context) {
-	user_id, err := strconv.Atoi(context.Param("userId"))
+	user_id := context.Param("userId")
 
-	if err != nil {
+	if user_id == "" {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameter"})
 		return
 	}
@@ -97,7 +90,7 @@ func Update(context *gin.Context) {
 	}
 
 	newPerson := model.Person{
-		ID:   user_id,
+		// ID:   user_id,
 		Name: input.Name,
 	}
 
@@ -142,20 +135,6 @@ func Delete(context *gin.Context) {
 
 }
 
-// func main() {
-// 	router := gin.Default()
-// 	router.Use(CORSMiddleware())
-// 	router.GET("/api", returnInfo)
-
-// 	port := os.Getenv("PORT")
-// 	if port == "" {
-// 		port = "8080"
-// 	}
-// 	if err := router.Run(":" + port); err != nil {
-// 		log.Panicf("error: %s", err)
-// 	}
-// }
-
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -170,43 +149,4 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		c.Next()
 	}
-}
-
-type simpleMessage struct {
-	SlackName     string `json:"slack_name"`
-	UtcTime       string `json:"utc_time"`
-	CurrentDay    string `json:"current_day"`
-	GithubFileUrl string `json:"github_file_url"`
-	GithubRepoUrl string `json:"github_repo_url"`
-	Track         string `json:"track"`
-	StatusCode    int    `json:"status_code"`
-}
-
-func returnInfo(c *gin.Context) {
-
-	// Get query parameters from url
-	slack_name := c.Request.URL.Query().Get("slack_name")
-	if slack_name == "" {
-		slack_name = "Joba Adewumi"
-	}
-	track := c.Request.URL.Query().Get("track")
-	if track == "" {
-		track = "Backend"
-	}
-
-	// get current day and utc date
-	currentUtcTime := time.Now().UTC()
-	currentDay := time.Now().Weekday()
-
-	simpleMessage := simpleMessage{
-		SlackName:     slack_name,
-		UtcTime:       currentUtcTime.Format(time.RFC3339),
-		CurrentDay:    currentDay.String(),
-		GithubFileUrl: "https://github.com/JobaAdewumi/simple-go-server-hng/blob/main/server.go",
-		GithubRepoUrl: "https://github.com/JobaAdewumi/simple-go-server-hng",
-		Track:         track,
-		StatusCode:    200,
-	}
-
-	c.IndentedJSON(http.StatusOK, simpleMessage)
 }
