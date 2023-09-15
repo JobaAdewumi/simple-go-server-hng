@@ -15,10 +15,7 @@ type Person struct {
 	Name string `gorm:"size:255;not null;unique" json:"name"`
 }
 
-// type NewPerson struct {
-// 	gorm.Model
-// 	Name string `gorm:"size:255;not null;unique" json:"name"`
-// }
+
 
 func (person *Person) Save() (*Person, error) {
 	person.Name = html.EscapeString(strings.TrimSpace(person.Name))
