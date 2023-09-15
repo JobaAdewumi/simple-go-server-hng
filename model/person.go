@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"server/database"
 
 	"github.com/google/uuid"
